@@ -1,0 +1,142 @@
+
+Kullanılan Teknolojiler :
+    
+        Tab Bar Controller, ( Anlatıldıgı vıdeo 148-149 Atilla Hoca)
+        
+        Firebase ( kullanıcı kayıdı, giriş çıkış işlemlerini hafızada tutma, text ve Image Verilerini kayıt etme,tarih kayıt etme)
+        Firebase Storage ( Image veritabanı) (vıdeo 153)
+        Firestore Database( Notların tutuldugu tarıhın tutuldugu)(vıdeo 153)
+        
+        Giriş Yapıldığında Kayıdının Tutulması için fairbase modülünün kullanılması.Firebase dende logouth olmamız gerekiyor.
+        
+        İmageView ile kullanıcıya galeriden resim seçtirildi ve resim seçilene kadar upload buttonunu kullanıcıya göstermedik.
+        
+        custom Cell oluşturuldu ( özel tasarım olarak oluşturulan cell hücresi)
+        
+        
+        
+
+
+Yapılışı:
+
+    3. sayfa için bir ciew Controller oluşturduk
+    3 sayfa icinde cocoa Touch Class  oluşturup view lara atarız.
+    3.sayfa buttonunda çıkışa basıldıgında kullanıcıyı ilk sayfaya göndermek için segue yapıyoruz.
+    
+    
+    kullanıcı oluşturma :
+        
+        Firebase e gelip "authentication" kısmında kurulumu başlatacagız
+        
+        ViewControllerda signupClicked  buttonu ıcerısınde işlemlerimi Auth ile yapacagım
+        auth().creat() ile kayıt işlemi yapılır.Bundan önce TextField larımız boşmu degilmi diye kontrol etmemiz gerekir.Boşsa alert ile kullanıcıya Bir mesaj gösterilir.
+        
+        
+    Kullanıcı Girişi :
+    
+        "ViewController" dosyamızda signIn  buttonu içerisinde "auth.signIn" key'i ile kullanıcı giriş methodunu çağırdık.
+        
+        Kullanıcı bir kere giriş yaptığında Kullanıcıyı hatırlası bir daha uygulamayı kapatığ açtığında tekrar giriş ekranı gelmemesi için Firebase'in kendi modülü var.Onu kullanıyoruz.Açıldığında Main de Tab Bar Controller un özelliklerinde "storyboarID" ' Ye ıd ekleriz. Bunu " SceneDelegate " Dosyasının içinde "scean Methodu" içerisinde kodlarız.
+        
+        Hafızada tutulan kullanıcının giriş yaptığı bilgisi çıkış yapıncada Hafızaya bildirilmesi gerekiyor.Yani Firebase dende Logouth olmamız gerekiyor.Bunun İçin
+        " SettingsVC " de kodumuzu yazacağız.
+        
+        
+        
+    Upload Ekranın Yapılması(Tasarım ve Resimin Galeriden Seçilmesi):
+        
+        ilk önce upload ekranını yapmalıyızki veritabanından veri çekip feed sayfasında gösterebilelim.
+        
+        İmage view , ekliyerek kullanıcının resim seçmesi için kullanırız. Bunun içinde hazır  resim olan select resmini koyduk.Biz resmin boyuna göre imageview ın boyutlarını ayarladık özellikleri sekmesinden , ayriyetten hazır kullandıgımız ayarlardanda width ve height i seçtik
+        
+        Kullanıcı yorum yapabilmesi içinde TextField kullandık.
+        
+        Resim seçme adımlarını  "viewDidLoad" methodunda kodluyoruz. ve gestureRecognizer bir method istediği için chooseImage()  methodu tanımlanır.
+        chooseImage() methodunun ıcı tanımlandıktan sonra ne yapacapını soylememiz gerekiyordu bunun için bir method daha oluştururuz.
+        
+        info.plist dosyasına gitip izin almamız gerekiyor."Privacy - Photo Library Usage Description"  diyerek.
+        
+        Bu işlemler bitince deniyoruz bir görsel seçebiliyormuyuz.
+        
+        
+    Upload Ekranın Yapılması ( Seçilen resimin ve Girilen Input yazısının Kayıt Edilmesi ) ( vıdeo 153):
+    
+        firebase den storage'i oluşturup burada "media" adında bir klasör oluşturuyoruz.
+        
+        kodlamaya actionButtonClicked() methodu içerisinde yapıyoruz.
+        
+        resimlerimi herzaman aynı isimda "image.jpg" olarak kayıt etmemesi için bir kaç birşey yapmamız gerekiyor.Eger bunu yapmaz isek aynı isimde kayıtlı verimizin üstüne kayıt ediyor ve önceki verimize ulaşamıyoruz.Bunun ıcın her veri kendi isimi(ID) ile kayıt edilsin Bunun ıcın UUID değişkeni tanımlanır.
+        
+        
+        
+    Database Adımlarının yapılması :
+    
+        "actionButtonClicked()" ıcerısınde tanımlarız
+        
+        "FieldValue.serverTimestamp()"  :  tarih alma bilgisi , ancak okurken bir başka işlem daha yapmamız gerekiyor.
+        
+        
+        
+    Feed Sayfasının Oluşturulması ( TASARIM AŞAMASI)
+    
+        "tableview" oluşturup custom cell oluşturcaz. Main de kendimiz özelliklerden cell hücresini arttırıyoruz ve alanını büyütüyoruz. storyboard da , Ben burada bir tane cell tasarımımı yaptım ve diğer cell lerdede bunun aynısını kullanmak istiyorum. Yani bütün verilerim aynı tasarımda gösterilmesini istiyorum.Bunun için cell'i seçip bir tane ID vereceğiz.Tableview Cell lerin kendi swift dosyaları oluyor.O yuzden tasarımda kullandıgım ımageview,label, buttonları bu cocou touch sınıfına kayıt edeceğiz. Nasıl yapıyoruz bunu Şu şekilde normal VC oluşturur gibi ancak oluştururken türünü "UITableViewCell" seçeriz ( Video 157 ) daha sonra bu oluşturulan swict dosyasını cell'i seçerek class ına atarız. Aynı ViewController oluşturup onlara kod dosyalarını tanımladıgımız gıbı.
+        
+        
+        Şimdi FeedVC de bu cell lerin gösterilmesi lazım bunun için FeedVC gidiyoruz.TableView için gerekli inheritance leri yaparız.Normal şekilde tableview adımlarını kodlarız. Burada cell ile değişkenlere ulaşarak Firebase'de tuttugumuz tataları alarak buraya bastırırız.
+        
+        
+    Feed Sayfasının Oluşturulması ( Verilerin Çekilerek Tableview da hücreye verilmesi adımı.)
+    
+        Bu veri alma işlemini ayrı bir method oluşturarak "getDataFromFirestore()" ile yaparız.Burada Verileri çekmeden önce bir tane tarih ayarı yapmamız gerekiyordu. cunku Verileri kayıt ederken kullanılan tarih formatını değişik şekilde alıyoruz ve bunu kullanabileceğimiz forma dönüştürmemiz gerekiyor.
+        
+        Verilerimi dictionary tarzında alırım  ve  " document.get("") as ? ....  " şeklinde çağırırım cast yaparak, Sonra verileri ben bir listeye atmam gerekiyorki  değişkenlerime atıyabileyim.
+        
+        
+        Firebaseden alınan imageUrl ini alıp nasıl gösteririz ? sorusunun cozumu kütüphanelerden yararlanmak  bizim yararlanacagımız kutuphane ise  "ios swift async image load into" google a yazıyoruz. Burada SDWebImage olanı acıyoruz. (Video 159 ) oradaki kutuphane yı podfile  a yukleyıp tekrardan pod ınstall yaparız.
+        
+        Bu işlemi yaptıktan sonra  bir şeyi duzeltmemiz gerekiyor tableview da gosterılen arraylerı yeni bir veri yuklenmeden sılmemız gerekıyorki , aynı verileri tekrardan kayıt edıp gostermesın.
+        
+        
+    
+    Verileri Hangi Sıralamaya Göre Çekeriz Onun yapılışı:
+    
+        Line 29 da bulunan "  ( fireStoreDatabase.collection("Posts").addSnapshotListener { snapshot, error in  ) " veri çekme kodumuzda  orderbyı eklersek neye göre verileri çekeyim diye bize soruyor.
+        
+                fireStoreDatabase.collection("Posts").order(by: "date", descending: true).addSnapshotListener { snapshot, error in // orderBy ekliyerek tarihe göre al ve true diyerek güncelden başla eskiye dogru sırala demıs oluyoruz.
+                
+        
+        
+        
+    Like Buttonu :
+        
+        FeedCell switf'inde likebuttonclicked yapmıştık orada koyluyoruz.
+        Like buttonuna tıklanınca ne yapılmasını ıstıyoruz , hangı postun like landığını alıp firebase de o postun  verisine işlemesini istiyoruz.Bunun İçin Document ID leri alıp oradaki veriye ulaşıp degerlerı atmamız gerekıyor.
+        
+        Bu işlemde  Görünmeyen bir label oluşturacagız her post ıcın , bunun uzerınden like lanan postun ID sını alacagız ve ona göre işlemimizi yaptıracagız.
+            1.gorunmeyen label oluşturuyoruz
+            2.FeedCell e geliyoruz ve outlet olarak atıyoruz.
+            3.FeedVC gidip tableView methodunda cell.documentIdLabel.text = documentIdArray[indexPath.row] ' u eklerız.
+            4.FeedCell'de artık buttona gelip istedigim postun ıd sine ve içerigine ulaşabılıyoruz
+            
+            
+            
+    Firebase Güvenliği için:
+    
+        Firebase sayfasına gelip Database de Rules sekmesine gelip Burada Gerekli izinleri yapmamız gerekiyor. Uygulamamızı mesela giriş yapanlar kullanacagılecek gorebılcek , veya veri işleyebilecek gibi gerekli izin kodlarını buradaki web sitesinde yazmamız gerekiyor
+        
+            
+                allow read, write: if request.auth != null;   bu nedemek kullanıcı eger kayıt olduysa yazabılırde okuyabılırde demıs oluyoruz.
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
